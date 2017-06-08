@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head runat="server">
+    <title>Geocoding Test</title>
+    <script type='text/javascript' 
+            src='http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.1.js'></script>   
+    <script src="https://maps.google.com/maps/api/js?sensor=true"></script>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style>
+        body,input { font-size: 9pt; }
+        html { height: 100% }  
+        body { height: 100%; margin: 0px; padding: 0px }  
+        #map_canvas { height: 100% }        
+    </style>
+    <script>
+        $(function () {
+            var markers = [];
+            //呼叫ashx, 透過Google地理編碼將地址轉為經緯座標, 並傳回$.ajax() deferred
+            function geocodeAjax(name, addr) {
+                var ajax =
+                        $.post("Geocode.ashx", { address: addr }, 
+                        function (r) {
+                            if (r.status == "OK") {
+                                var loc = r.results[0].geometry.location;
+                                markers.push({
+                                    title: name + "@" + addr,
+                                    latlng: new google.maps.LatLng(loc.lat, loc.lng)
+                                });
+                            }
+                        }, "json");
+                return ajax;
+            }
+ 
+            $.get("AddrList.txt", {}, function (list) {
+                var lines = list.replace(/\r/g, "").split('\n');
+                var deferredArray = [];
+                //lines[i]格式如下:
+                //中正中隊-華山分隊,(02)23412668,中正區北平東路1號 
+                for (var i = 0; i < lines.length; i++) { //lines.length; i++) {
+                    var parts = lines[i].split(',');
+                    //以AJAX進行地址轉換，並將$.ajax() deferred物件放入陣列中
+                    deferredArray.push(geocodeAjax(parts[0], parts[2]));
+                }
+                //利用jQuery deferred特性，在所有地址轉換AJAX呼叫完畢後，執行特定動作
+                $.when.apply(null, deferredArray).then(function () {
+                    //設定地圖參數
+                    var mapOptions = {
+                        mapTypeId: google.maps.MapTypeId.ROADMAP //正常2D道路模式
+                    };
+                    //在指定DOM元素中嵌入地圖
+                    var map = new google.maps.Map(
+                        document.getElementById("map_canvas"), mapOptions);
+                    //使用LatLngBounds統計檢視範圍
+                    var bounds = new google.maps.LatLngBounds();
+                    //加入標示點(Marker)
+                    for (var i = 0; i < markers.length; i++) {
+                        var m = markers[i];
+                        //將此座標納入檢視範圍
+                        bounds.extend(m.latlng);
+                        var marker = new google.maps.Marker({
+                            position: m.latlng,
+                            title: m.title,
+                            map: map
+                        });
+                    }
+                    //調整檢視範圍
+                    map.fitBounds(bounds);
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<div id="map_canvas" style="width:100%; height:100%"></div>
+</body>
+</html>
