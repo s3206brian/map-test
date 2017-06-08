@@ -1,0 +1,80 @@
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<title>Google Maps JavaScript API Example</title>
+
+<script src="http://www.google.com/jsapi?key=ABQIAAAAHse-GGY_00-U5SRQBPV9dBReBax2grriB_-tQq0LSZirt5GhjRQkmE2EaXUL4QmZlvKQjlsd_eBWlg"
+    type="text/javascript"></script>
+<script type="text/javascript">
+    google.load("maps", "2", {
+        "locale": "UTF-8"
+    });
+</script>
+<script type="text/javascript">
+    //<![CDATA[
+
+    function load() {
+        if (GBrowserIsCompatible()) {
+            var map = new GMap2(document.getElementById("map"));
+            map.setCenter(new GLatLng(37.4419, -122.1419), 13);
+        }
+    }
+
+    //]]>
+</script>
+<script type="text/javascript">
+  function showAddress(address, message, map_id_name) {
+    if (GBrowserIsCompatible()) {
+      //alert(address);
+      map = new GMap2(document.getElementById(map_id_name));
+      map.addControl(new GSmallMapControl());
+        geocoder = new GClientGeocoder();
+        geocoder.getLatLng(address, function(point) {
+            if (!point) {
+              map.setCenter(new GLatLng(23.634416,120.970529), 7);
+              var marker = new GMarker(new GLatLng(23.634416,120.970529));
+              map.addOverlay(marker);
+              marker.openInfoWindowHtml("找不到該地址，無法顯示相關地圖");
+            } else {
+              map.setCenter(point, 13);
+              var marker = new GMarker(point);
+              map.addOverlay(marker);
+              marker.openInfoWindowHtml(message);
+            }
+          });
+    }
+  }
+</script>
+
+<div id="map" style="width: 500px; height: 300px; position: relative; overflow: hidden;">
+    <div style="height: 100%; width: 100%; position: absolute; top: 0px; left: 0px; background-color: rgb(229, 227, 223);">
+        <div class="gm-style" style="position: absolute; z-index: 0; left: 0px; top: 0px; height: 100%; width: 100%; padding: 0px; border-width: 0px; margin: 0px;">
+            <div style="position: absolute; z-index: 0; left: 0px; top: 0px; height: 100%; width: 100%; padding: 0px; border-width: 0px; margin: 0px; cursor: url("
+                https://maps.gstatic.com/mapfiles/openhand_8_8.cur ") 8 8, default;">
+                <div style="z-index: 1; position: absolute; top: 0px; left: 0px; width: 100%; transform-origin: 0px 0px 0px; transform: matrix(1, 0, 0, 1, 0, 0);">
+                    <div style="position: absolute; left: 0px; top: 0px; z-index: 100; width: 100%;">
+                        <div style="position: absolute; left: 0px; top: 0px; z-index: 0;">
+                            <div aria-hidden="true" style="position: absolute; left: 0px; top: 0px; z-index: 1; visibility: inherit; display: block;"></div>
+                        </div>
+                    </div>
+                    <div style="position: absolute; left: 0px; top: 0px; z-index: 101; width: 100%;"></div>
+                    <div style="position: absolute; left: 0px; top: 0px; z-index: 102; width: 100%;"></div>
+                    <div style="position: absolute; left: 0px; top: 0px; z-index: 103; width: 100%;"></div>
+                    <div style="position: absolute; z-index: 0;">
+                        <div style="overflow: hidden;"></div>
+                    </div>
+                </div>
+                <div style="z-index: 2; position: absolute; height: 100%; width: 100%; padding: 0px; border-width: 0px; margin: 0px; left: 0px; top: 0px;"></div>
+                <div style="z-index: 3; position: absolute; height: 100%; width: 100%; padding: 0px; border-width: 0px; margin: 0px; left: 0px; top: 0px;">
+                    <div style="z-index: 1; position: absolute; height: 100%; width: 100%; padding: 0px; border-width: 0px; margin: 0px; left: 0px; top: 0px;"></div>
+                </div>
+                <div style="z-index: 4; position: absolute; top: 0px; left: 0px; width: 100%; transform-origin: 0px 0px 0px; transform: matrix(1, 0, 0, 1, 0, 0);">
+                    <div style="position: absolute; left: 0px; top: 0px; z-index: 104; width: 100%;"></div>
+                    <div style="position: absolute; left: 0px; top: 0px; z-index: 105; width: 100%;"></div>
+                    <div style="position: absolute; left: 0px; top: 0px; z-index: 106; width: 100%;"></div>
+                    <div style="position: absolute; left: 0px; top: 0px; z-index: 107; width: 100%;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div></div>
+    <div></div>
+</div>

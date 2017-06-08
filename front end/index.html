@@ -80,9 +80,9 @@
                 </div>
                 <div class="col-lg-12">
                     <div class="input-group">
-                        <input type="text" class="form-control input-lg" placeholder="輸入您居住的位置">
+                        <input id="mapwhere" type="text" class="form-control input-lg" placeholder="輸入您居住的位置" value="" >
                         <span class="input-group-btn">
-                        <button class="btn btn-lg btn-primary" type="button">Go!</button>
+                        <button id="mapcontrol" class="btn btn-lg btn-primary" type="button">Go!</button>
       </span>
                     </div>
                     <!-- /input-group -->
@@ -314,6 +314,14 @@
         $('.map').on('click', onMapClickHandler);
     </script>
 
+    <!--get address-->
+    <script>
+        $(document).ready(function () {
+            $("#mapcontrol").click(function () {
+                alert("Value: " + $("#mapwhere").val());
+            });
+        });
+    </script>
 </body>
 
 </html>
